@@ -1,10 +1,12 @@
 import express from "express";
 import helmet from "helmet";
 import config from "./config/index.js"
+import loaders from "./loaders/index.js"
 import  router  from "./api-routes/index.js";
 const app = express()
 
-config() 
+config()
+loaders()
 
 app.use(express.json())
 app.use(helmet())

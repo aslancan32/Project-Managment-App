@@ -8,4 +8,14 @@ const ProjectSchema =  new mongoose.Schema({
     // },
 }, {versionKey:false, timestamps:true})
 
+// ProjectSchema.pre("save", (next) => {
+//     console.log("Oncesi")
+//     next()
+// })
+
+ProjectSchema.post("save", (obj) => {
+    return console.log("Sonrasi"+ obj)
+    // Save is Succesfull ... Create Log
+})
+
 export default mongoose.model("project", ProjectSchema)

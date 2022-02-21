@@ -1,25 +1,29 @@
-import insert from "../services/Projects.js";
+import {insert, list} from "../services/Projects.js";
 import httpStatus from "http-status";
 
 const index = (req,res)=> {
-    console.log("project"); 
-    res.send("Project Routes Get")
+    console.log("Get Project"); 
+    list()
+        .then(response => res.status(httpStatus.OK).send(response))
+        .catch(e => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(e))
 }
 
-const projects = (req,res)=> {
-    console.log("Post Project Routes"); 
+const create = (req,res)=> {
+    console.log("Post Project"); 
 
-    insert({id:1, name:"Mucahit"}).then((response) => {
-        res.status(httpStatus.CREATED).send(response)
+    insert(req.body)
+        .then((response) => {
+            res.status(httpStatus.CREATED).send(response)
+            console.log(response.name + " created");
+            }
+        ).catch((e) => {
+            console.log(e);
+            res.status(httpStatus.INTERNAL_SERVER_ERROR).send(e)
+
         }
-    ).catch((e) => {
-        console.log(e);
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).send(e)
-
-    }
     )
 
 }
 
 
-export {projects, index}
+export {create, index}

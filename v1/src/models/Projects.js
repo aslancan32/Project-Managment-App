@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import logger from "../scripts/loggar/Projects.js";
 
 const ProjectSchema =  new mongoose.Schema({
     name: String,
@@ -14,7 +15,11 @@ const ProjectSchema =  new mongoose.Schema({
 // })
 
 ProjectSchema.post("save", (obj) => {
-    return console.log("Sonrasi"+ obj)
+    // console.log("Sonrasi"+ obj)
+    logger.log({
+        level: "info",
+        message: obj
+    })
     // Save is Succesfull ... Create Log
 })
 

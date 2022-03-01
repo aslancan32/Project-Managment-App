@@ -1,3 +1,4 @@
-import { router } from "./Projects.js";
+import   routerProjects  from "./Projects.js";
+import   routerUser  from "./Users.js";
 
-export default router
+export {routerProjects,routerUser}

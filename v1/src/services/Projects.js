@@ -1,7 +1,7 @@
 import Project from "../models/Projects.js";
 
-const insert = (projectData) => {
-    const projects = new Project(projectData);
+const insert = (data) => {
+    const projects = new Project(data);
     return projects.save()
 }
 const list = () => {

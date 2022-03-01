@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const db = mongoose.connection;
 
-    db.on('error', (err) => console.log(err))
+    db.on('error', (err) => console.log(err.reason))
     db.on('open', () => console.log("DB connection is Succesfull"))
 
 const connectDB = async () => {

@@ -11,4 +11,16 @@ const list = () => {
 const loginUser = (loginData) => {
     return User.findOne(loginData)
 }
-export {insert, list, loginUser}
+
+const modify = (where, data) =>{
+    //! Filter data that comes from req.body 
+    // Object.keys(data).reduce((obj, key) => {
+    //     if (key != "password") obj[key] = data[key]
+    //     return obj
+    // }, {})
+
+    return User.findOneAndUpdate(where, data, {new: true})
+}
+
+
+export {insert, list,modify, loginUser}

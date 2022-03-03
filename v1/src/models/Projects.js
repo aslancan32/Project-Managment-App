@@ -3,10 +3,10 @@ import logger from "../scripts/loggar/Projects.js";
 
 const ProjectSchema =  new mongoose.Schema({
     name: String,
-    // user_id: {
-    //     type: mongoose.Types.ObjectId,
-    //     ref: user_id
-    // },
+    user_id: {
+        type: mongoose.Types.ObjectId,
+        ref: "user"
+    },
 }, {versionKey:false, timestamps:true})
 
 // ProjectSchema.pre("save", (next) => {

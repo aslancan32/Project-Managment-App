@@ -24,4 +24,8 @@ const updateUserInfoValidation = Joi.object({
         .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
 })
 
-export { userValidation, loginValidation, resetPasswordValidation, updateUserInfoValidation}
+const passwordValidation = Joi.object({
+    password: Joi.string().min(6).max(45).required()
+})
+
+export { userValidation, loginValidation, resetPasswordValidation, updateUserInfoValidation, passwordValidation}

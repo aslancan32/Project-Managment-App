@@ -1,9 +1,11 @@
 import httpStatus from "http-status";
 import { v4 as uuidv4 } from "uuid";
-import {insert, list, loginUser, modify} from "../services/Users.js";
+import {insert, list, loginUser, modify, remove} from "../services/Users.js";
 import * as projectServices from "../services/Projects.js";
 import {generateAccessToken, generateRefreshToken, passwordToHash} from "../scripts/utils/helper.js";
 import eventEmiter from "../scripts/events/eventEmiter.js";
+import path from "path"
+import { fileURLToPath } from "url";
 
 const index = (req,res)=> {
     console.log("Get Users"); 
@@ -66,7 +68,7 @@ const resetPassword = (req, res) => {
         .catch(() => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({error: "Sifre sifirlama sirasinda bir hata olustu"}))
 }
 
-const updateUserInfo = (req,res) => {
+const updateInfo = (req,res) => {
     // console.log('req.user :>> ', req.user._id);
     modify({_id: req.user._id}, req.body)
         .then(updatedUser => {
@@ -74,5 +76,40 @@ const updateUserInfo = (req,res) => {
         })
         .catch((err) => res.status(INTERNAL_SERVER_ERROR).send(err))
 }
+const changePassword = (req,res) => {
+    modify({_id: req.user._id}, {password: passwordToHash(req.body.password)})
+    .then(updatedUser => {
+        res.status(httpStatus.OK).send(updatedUser)
+    })
+    .catch((err) => res.status(INTERNAL_SERVER_ERROR).send(err))
+}
 
-export {create, index, login, projectList, resetPassword,updateUserInfo}
+const deleteUser = (req, res) => {
+    if(!req.params?.id.match(/^[0-9a-fA-F]{24}$/)) return res.status(httpStatus.BAD_REQUEST).send({message: "ID is not correct"})
+    remove(req.params?.id)
+        .then((deletedUser) => {
+            console.log('deletedUSer :>> ', deletedUser);
+            if(!deletedUser ) {
+                return res.status(httpStatus.NOT_FOUND).send({message: "User not found"})
+            }
+            res.status(httpStatus.OK).send(deletedUser)
+
+        }).catch((err) => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({message: "An error occurred in save progres",err}))
+        
+}
+
+const updateProfileImage = (req, res) => {
+    const __filename = fileURLToPath(import.meta.url)
+    const __dirname = path.dirname(__filename)
+    const fileName = req.user._id + path.extname(req.files.profile_image.name)
+    const folderPath = path.join(__dirname, "../", "uploads/users",fileName )
+    if (!req?.files?.profile_image) { return res.status(httpStatus.BAD_REQUEST).send({error : "Lutfen bir profil fotografi seciniz."})}
+    req.files.profile_image.mv(folderPath, (err) => {
+        if (err) return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({err: err})
+
+        modify({_id: req.user._id}, {profile_image: fileName}).then((updatedUser) => {
+            res.status(httpStatus.OK).send({message : updatedUser})
+        }).catch(() => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({error: "Fotograf basariyla yuklendi, Fakat kayit isleminde bir sorun olustu."}))
+    })
+}
+export {create, index, login, projectList, resetPassword, updateInfo, deleteUser, changePassword, updateProfileImage}

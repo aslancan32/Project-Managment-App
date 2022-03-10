@@ -1,4 +1,4 @@
-import {insert, list, modify} from "../services/Projects.js";
+import {insert, list, modify, remove} from "../services/Projects.js";
 import httpStatus from "http-status";
 
 const index = (req,res)=> {
@@ -30,5 +30,18 @@ const update = (req,res) => {
         .then(updatedProject => res.status(httpStatus.OK).send(updatedProject))
         .catch(err => res.status(httpStatus.BAD_REQUEST).send(err))
 }
+const deleteProject = (req, res) => {
+    if(!req.params?.id.match(/^[0-9a-fA-F]{24}$/)) return res.status(httpStatus.BAD_REQUEST).send({message: "ID is not correct"})
+    remove(req.params?.id)
+        .then((deletedProject) => {
+            console.log('deletedProject :>> ', deletedProject);
+            if(!deletedProject ) {
+                return res.status(httpStatus.NOT_FOUND).send({message: "Project not found"})
+            }
+            res.status(httpStatus.OK).send(deletedProject)
 
-export {create, index, update}
+        }).catch((err) => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({message: "An error occurred in save progres",err}))
+        
+}
+
+export {create, index, update, deleteProject}

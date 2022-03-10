@@ -11,4 +11,9 @@ const userSchema = new mongoose.Schema({
     
 
 },{versionKey:false, timestamps:true});
+
+const isValidObjectID = (id) => {mongoose.Types.ObjectId.isValid}
+
+
 export default mongoose.model("user", userSchema)
+export {isValidObjectID}

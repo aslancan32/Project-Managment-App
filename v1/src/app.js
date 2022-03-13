@@ -7,8 +7,6 @@ import events from './scripts/events/index.js'
 import { fileURLToPath } from 'url'
 import  {routerUser, routerProjects, routerSection, routerTasks}  from "./api-routes/index.js";
 import path from "path";
-
-
 const app = express()
 
 config()
@@ -27,4 +25,5 @@ app.listen(process.env.APP_PORT, () => {
     app.use("/users", routerUser)
     app.use("/sections", routerSection)
     app.use("/tasks", routerTasks)
+
 })  

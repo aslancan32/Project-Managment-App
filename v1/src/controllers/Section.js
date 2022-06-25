@@ -51,7 +51,4 @@ class Section{
     }
 }
 
-
-
-
 export default new Section()

@@ -1,4 +1,5 @@
 import httpStatus from "http-status";
+import ApiError from "../error/apiError.js";
 import ProjectServices from "../services/Projects.js";
 
 class Project {
@@ -25,10 +26,16 @@ class Project {
         )
     }
     
-    update (req,res)  {
+    update (req,res, next)  {
         // console.log('req.prams.id :>> ', req.params.id);
+        
         ProjectServices.update(req.params.id, req.body)
-            .then(updatedProject => res.status(httpStatus.OK).send(updatedProject))
+            .then(updatedProject => {
+                if(!updatedProject) return next(new ApiError("Project Not Found", 404))
+
+                
+                res.status(httpStatus.OK).send(updatedProject)
+            })
             .catch(err => res.status(httpStatus.BAD_REQUEST).send(err))
     }
     deleteProject (req, res)  {

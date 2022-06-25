@@ -7,6 +7,8 @@ import events from './scripts/events/index.js'
 import { fileURLToPath } from 'url'
 import  {routerUser, routerProjects, routerSection, routerTasks}  from "./api-routes/index.js";
 import path from "path";
+import errorHandler from "./middlewares/errorHandler.js";
+import ApiError from "./error/apiError.js";
 const app = express()
 
 config()
@@ -26,4 +28,10 @@ app.listen(process.env.APP_PORT, () => {
     app.use("/sections", routerSection)
     app.use("/tasks", routerTasks)
 
+    app.use((req, res, next) =>{
+        const error = new ApiError("Aradiginiz Sayfa bulunamadi", 404);
+        next(error)
+    })
+
+    app.use(errorHandler)
 })  
